@@ -3,7 +3,7 @@
 #https://twitter.com/VamptwitPotter
 
 from sys import argv
-from random import randint
+from random import choice
 import twitter
 
 
@@ -34,34 +34,27 @@ def make_text(chains):
 
     #create tuple list of dictionary items (each key,value pair now a single item in list)
     tups = chains.items()
-    #len of tups is 152
-    length = len(tups)
     #select random index in tups list
 
     tweet = []
-
     count = 0
-
-    while count < 2:
-        rand_index = randint(0,length)
-    #return value of rand_index - the actual words
-        rand_set = tups[rand_index - 1]
-    #access key using rand_set to return the FIRST word of the tuple
-        first_word = rand_set[0][0]
-    #access key using rand_set to return the SECOND word of tuple
-        second_word = rand_set[0][1]
-    #separate second tuple from selected list key,value pairs
-        second_tup = rand_set[1]
-    #select a random number to return a value to be chosen from second tuple
-        rand_picker = len(second_tup)
-    #return value using rand_pick number to access value
-        rand_value = second_tup[rand_picker - 1]
-    #3 word pair (key and random value)    
-        tweet_phrase = first_word + " " + second_word + " " + rand_value + " "
+    while count < 3:
+        #get random tuple
+        rand_tup = choice(tups)
+        #return the FIRST word of the tuple
+        first_word = rand_tup[0][0]
+        #return the SECOND word of tuple
+        second_word = rand_tup[0][1]
+        #return value using choice to randomly pick value
+        rand_value = choice(rand_tup[1])
+        #3 word pair (key and random value)    
+        tweet_phrase = first_word + " " + second_word + " " + rand_value
         tweet.append(tweet_phrase)
         count += 1
     final_tweet =  " ".join(tweet)
     return final_tweet
+
+
 
 
 def main():
@@ -82,10 +75,16 @@ def main():
 
     chain_dict = make_chains(input_text)
     random_text = make_text(chain_dict)
+    print random_text
     api = twitter.Api(consumer_key='ubKXrQeqqmFKCTmCPklgwg', consumer_secret='rFLjdKZMw4z82ENwr6zhthR5pd88eM6JF4XVqEV0', access_token_key='1279111003-Cdxog5qLSumAJasSTfFpoLGLLJRIoo3doO6keOq', access_token_secret='nrG0wyAsiA8ro0wzAvMQPaMC9L8EVbAJ94BLOdTSRo')
+    print "Tweet? y or n"
+    post_tweet = raw_input("> ")
+    if post_tweet == 'y':
+        status = api.PostUpdates(random_text)
+    else:
+        print "Ok, not tweeted."
 
-    status = api.PostUpdates(random_text)
 
-main()
+#main()
 if __name__ == "__main__":
     main()
